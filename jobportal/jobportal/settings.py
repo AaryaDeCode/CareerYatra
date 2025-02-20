@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     "rest_framework",
     "rest_framework_simplejwt",
     "users",
@@ -84,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'jobportal',  # Replace with your MySQL database name
         'USER': 'root',  # Replace with your MySQL username
-        'PASSWORD': 'aarya007',  # Replace with your MySQL password
+        'PASSWORD': 'Your database password',  # Replace with your MySQL password
         'HOST': '127.0.0.1',  # Change if your database is hosted remotely
         'PORT': '3306',  # Default MySQL port
     }
@@ -145,3 +144,4 @@ REST_FRAMEWORK = {
 
 
 AUTH_USER_MODEL = "users.CustomUser"
+
