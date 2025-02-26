@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "users",
     "jobs",
     "candidates",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'jobportal.urls'
@@ -83,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'jobportal',  # Replace with your MySQL database name
         'USER': 'root',  # Replace with your MySQL username
-        'PASSWORD': 'Your database password',  # Replace with your MySQL password
+        'PASSWORD': 'aarya007',  # Replace with your MySQL password
         'HOST': '127.0.0.1',  # Change if your database is hosted remotely
         'PORT': '3306',  # Default MySQL port
     }
@@ -141,7 +143,12 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React development server
+]
 
 AUTH_USER_MODEL = "users.CustomUser"
 

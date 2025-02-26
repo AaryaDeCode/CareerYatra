@@ -1,0 +1,15 @@
+/admin                                           for superuser
+
+/api/auth/register                               for register
+/api/auth/login                                  for login
+
+/api/jobs                                       for recruiters to see job posts
+/api/recruiter/jobs                              for recruiter to see his own jobs
+/api/recruiter/jobs/<int> (job post id)           for recruiter to check partiicular post in detail
+/api/recruiter/jobs/<int(job post id)/applicants  for recruiters to check applicantions of his job post
+
+/api/candidates/jobs                       for candidates to see job posts
+/api/candidates/apply/<int>(job id)        for candidates to apply particular job post
+/api/candidates/mmy-applications/          for candidates to see his  applications
+/api/candidates/withdraw/<int>(job id)     for candidates to withdraw their applications
+
