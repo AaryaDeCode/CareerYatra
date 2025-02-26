@@ -1,0 +1,15 @@
+/admin                                        for superuser
+
+/auth/register                               for register
+/auth/login                                  for login
+
+/jobs                                       for recruiters to see job posts
+/my-posts                              for recruiter to see his own jobs
+/recruiter/jobs/<int> (job post id)           for recruiter to check partiicular post in detail
+/recruiter/jobs/<int(job post id)/applicants  for recruiters to check applicantions of his job post
+
+/candidates/jobs                       for candidates to see job posts
+/candidates/apply/<int>(job id)        for candidates to apply particular job post
+/candidates/mmy-applications/          for candidates to see his  applications
+/candidates/withdraw/<int>(job id)     for candidates to withdraw their applications
+
