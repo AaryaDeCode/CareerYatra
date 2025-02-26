@@ -1,0 +1,61 @@
+.dashboard-container {
+    padding: 2rem;
+    background: linear-gradient(135deg, #4a90e2, #9013fe);
+    min-height: 100vh;
+    color: white;
+  }
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .dashboard-link {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+  }
+  
+  .dashboard-link:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .dashboard-content {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    color: black;
+  }
+  
+  .section-title {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .job-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .job-card {
+    background: white;
+    color: black;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    width: 300px;
+  }
+  
+  .no-jobs {
+    font-style: italic;
+  }
+  

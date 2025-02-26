@@ -10,8 +10,19 @@ const Login = ({ onLogin }) => {
     e.preventDefault();
     // Replace with real authentication logic
     onLogin('candidate', 'mockToken123', username);
-    navigate('/candidate/dashboard');
+    navigate('/recruiter/dashboard');
   };
+ /* const handleLogin = (role, token, username) => {
+    setIsAuthenticated(true);
+    setUserRole(role);
+    setToken(token);
+    setUsername(username);
+    
+    localStorage.setItem('token', token);
+    localStorage.setItem('userRole', role);
+    localStorage.setItem('username', username);
+  };*/
+  
 
   return (
     <div className="auth-container">

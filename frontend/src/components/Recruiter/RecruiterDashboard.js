@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getPosts } from '../../services/apiService';
 import JobPostForm from './JobPostForm';
+import '../../styles/Dashboard.css'; // Ensure this CSS file exists
 
 const RecruiterDashboard = ({ token, username }) => {
   const [posts, setPosts] = useState([]);
@@ -10,7 +11,6 @@ const RecruiterDashboard = ({ token, username }) => {
     const fetchPosts = async () => {
       try {
         const allPosts = await getPosts();
-        // Show only the posts created by the logged-in recruiter
         const myPosts = allPosts.filter(post => post.author_username === username);
         setPosts(myPosts);
       } catch (error) {
@@ -21,33 +21,36 @@ const RecruiterDashboard = ({ token, username }) => {
   }, [username]);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Recruiter Dashboard</h2>
-      <nav>
-        <Link to="/profile">Update Profile</Link>
-      </nav>
-      <JobPostForm token={token} onPostCreated={() => {
-        // Refresh posts after a new job is posted
-        setTimeout(() => {
-          getPosts().then(allPosts => {
-            const myPosts = allPosts.filter(post => post.author_username === username);
-            setPosts(myPosts);
-          });
-        }, 500);
-      }} />
-      <h3>My Job Posts</h3>
-      {posts.length === 0 ? (
-        <p>You haven't posted any jobs yet.</p>
-      ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {posts.map(post => (
-            <li key={post.id} style={{ border: '1px solid #ccc', marginBottom: '15px', padding: '10px' }}>
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h2>Recruiter Dashboard</h2>
+        <Link to="/profile" className="dashboard-link">Update Profile</Link>
+      </div>
+
+      <div className="dashboard-content">
+        <JobPostForm token={token} onPostCreated={() => {
+          setTimeout(() => {
+            getPosts().then(allPosts => {
+              const myPosts = allPosts.filter(post => post.author_username === username);
+              setPosts(myPosts);
+            });
+          }, 500);
+        }} />
+      </div>
+
+      <h3 className="section-title">My Job Posts</h3>
+      <div className="job-list">
+        {posts.length === 0 ? (
+          <p className="no-jobs">You haven't posted any jobs yet.</p>
+        ) : (
+          posts.map(post => (
+            <div key={post.id} className="job-card">
               <h4>{post.company_name} - {post.role}</h4>
-              <p>{post.experience}</p>
-            </li>
-          ))}
-        </ul>
-      )}
+              <p>Experience: {post.experience}</p>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };
