@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
 from .models import CustomUser
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -18,6 +19,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
+CustomUser = get_user_model()
 
 class LoginSerializer(serializers.Serializer):
     email_or_username = serializers.CharField()
@@ -27,15 +29,21 @@ class LoginSerializer(serializers.Serializer):
         email_or_username = data.get("email_or_username")
         password = data.get("password")
 
-        user = (
-            authenticate(username=email_or_username, password=password)
-            or authenticate(email=email_or_username, password=password)
-        )
+        user = authenticate(username=email_or_username, password=password)
+
+        # If user is not found via username, try email lookup manually
+        if user is None:
+            try:
+                user_obj = CustomUser.objects.get(email=email_or_username)
+                user = authenticate(username=user_obj.username, password=password)
+            except CustomUser.DoesNotExist:
+                pass
 
         if user is None:
             raise serializers.ValidationError("Invalid credentials")
 
         return {"user": user}
+
 
 
 class UserSerializer(serializers.ModelSerializer):
