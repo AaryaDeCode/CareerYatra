@@ -29,7 +29,7 @@ class PublicJobPostView(generics.ListAPIView):
 
 class JobPostView(generics.ListCreateAPIView):
     serializer_class = JobPostSerializer
-    permission_classes = [IsAuthenticated, IsRecruiter]
+    permission_classes = []
 
     def get_queryset(self):
         return JobPost.objects.filter(recruiter=self.request.user)

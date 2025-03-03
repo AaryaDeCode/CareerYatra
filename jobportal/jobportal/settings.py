@@ -136,20 +136,40 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
-    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # Token-based authentication
+        'rest_framework.authentication.SessionAuthentication',  # Browsable API support
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # Require authentication for all views
+    ],
 }
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
-CORS_ALLOW_ALL_ORIGINS = True
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React development server
+    "http://localhost:3000",  # ✅ Allow frontend to access backend
 ]
+
+CORS_ALLOW_CREDENTIALS = True  # ✅ Allow cookies & authentication
+CORS_ALLOW_ALL_ORIGINS = True  # Not recommended for production
+
+CORS_ALLOW_METHODS = [  # ✅ Allow specific HTTP methods
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS"
+]
+
+CORS_ALLOW_HEADERS = [  # ✅ Allow specific headers
+    "content-type",
+    "authorization",
+    "Access-Control-Allow-Origin",
+]
+
+
 
 AUTH_USER_MODEL = "users.CustomUser"
 

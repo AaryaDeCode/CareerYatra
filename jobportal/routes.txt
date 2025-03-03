@@ -3,8 +3,8 @@
 /auth/register                               for register
 /auth/login                                  for login
 
-/jobs                                       for recruiters to see job posts
-/my-posts                              for recruiter to see his own jobs
+/recruiters/jobs                              for recruiters to see job posts but cant apply
+/recruiter/my-posts                           for recruiter to see his own jobs and job post
 /recruiter/jobs/<int> (job post id)           for recruiter to check partiicular post in detail
 /recruiter/jobs/<int(job post id)/applicants  for recruiters to check applicantions of his job post
 

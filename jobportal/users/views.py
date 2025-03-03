@@ -1,12 +1,15 @@
 from rest_framework.response import Response
 from rest_framework import generics, status
+from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from django.contrib.auth import get_user_model
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
-from .models import CustomUser
+
+CustomUser = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -24,18 +27,15 @@ class RegisterView(generics.CreateAPIView):
         )
 
 
-from rest_framework.permissions import AllowAny
-
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
-    permission_classes = [AllowAny]  # Make sure login is accessible
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
 
-        # Generate JWT tokens
         token = RefreshToken.for_user(user)
         return Response(
             {

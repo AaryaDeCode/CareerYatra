@@ -1,7 +1,7 @@
-//src/utils/AuthContext.js
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+// src/utils/AuthContext.js
+import React, { createContext, useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -11,91 +11,52 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Set up axios defaults
   useEffect(() => {
-    const accessToken = localStorage.getItem('access_token');
-    if (accessToken) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-    }
-  }, []);
+    const loadUser = async () => {
+      const storedUser = sessionStorage.getItem("user");
+      const token = sessionStorage.getItem("access_token");
 
-  // Load user from localStorage on initial load
-  useEffect(() => {
-    const loadUser = () => {
-      const user = localStorage.getItem('user');
-      const token = localStorage.getItem('access_token');
-
-      if (user && token) {
-        setUser(JSON.parse(user));
-        setIsAuthenticated(true);
+      if (storedUser && token) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+          setIsAuthenticated(true);
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        } catch (error) {
+          console.error("Error parsing user data:", error);
+          sessionStorage.clear();
+        }
       }
-
       setLoading(false);
     };
 
     loadUser();
   }, []);
 
-  // Function to handle logout
-  const logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
-    setUser(null);
-    setIsAuthenticated(false);
-    delete axios.defaults.headers.common['Authorization'];
-    navigate('/auth/login');
+  const refreshAccessToken = async () => {
+    try {
+      const refresh_token = sessionStorage.getItem("refresh_token");
+      if (!refresh_token) return;
+
+      const res = await axios.post("/auth/token/refresh/", { refresh: refresh_token });
+      sessionStorage.setItem("access_token", res.data.access);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.access}`;
+    } catch (error) {
+      console.error("Token refresh failed", error);
+      logout();
+    }
   };
 
-  // Interceptor for handling token expiration
-  useEffect(() => {
-    const interceptor = axios.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const originalRequest = error.config;
-
-        // If the error is 401 and we haven't tried to refresh the token yet
-        if (error.response && error.response.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
-
-          try {
-            // Try to refresh the token
-            const refreshToken = localStorage.getItem('refresh_token');
-            const res = await axios.post('/api/token/refresh/', { refresh: refreshToken });
-
-            // Update the tokens
-            localStorage.setItem('access_token', res.data.access);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.access}`;
-
-            // Retry the original request
-            return axios(originalRequest);
-          } catch (refreshError) {
-            // If refresh fails, logout
-            logout();
-            return Promise.reject(refreshError);
-          }
-        }
-
-        return Promise.reject(error);
-      }
-    );
-
-    return () => {
-      axios.interceptors.response.eject(interceptor);
-    };
-  }, [navigate]);
+  const logout = () => {
+    sessionStorage.clear();
+    setUser(null);
+    setIsAuthenticated(false);
+    delete axios.defaults.headers.common["Authorization"];
+    navigate("/auth/login");
+  };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated,
-        loading,
-        logout,
-        setUser,
-        setIsAuthenticated
-      }}
-    >
+    <AuthContext.Provider value={{ user, isAuthenticated, loading, logout, setUser, setIsAuthenticated, refreshAccessToken }}>
       {children}
     </AuthContext.Provider>
   );
